@@ -1,0 +1,25 @@
+{
+  "name": "connection-watcher",
+  "version": "0.1.0",
+  "description": "Internet connection watcher library",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BenjaminFerge/connection-watcher.git"
+  },
+  "keywords": [
+    "internet",
+    "connection",
+    "watcher",
+    "network"
+  ],
+  "author": "Benjámin J. Ferge <benjamin.ferge@protonmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BenjaminFerge/connection-watcher/issues"
+  },
+  "homepage": "https://github.com/BenjaminFerge/connection-watcher#readme"
+}
