@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>connection-watcher examples</title>
+</head>
+<body>
+    <button onclick="start()">start</button>
+    <button onclick="stop()">stop</button>
+    <button onclick="logResults()">log results</button>
+    <table>
+        <tr>
+            <td>lan</td>
+            <td><pre id="lanResult"></pre></td>
+        </tr>
+        <tr>
+            <td>conn1</td>
+            <td><pre id="conn1Result"></pre></td>
+        </tr>
+        <tr>
+            <td>conn2</td>
+            <td><pre id="conn2Result"></pre></td>
+        </tr>
+    </table>
+    <script src="../dist/connection-watcher.js"></script>
+    <script>
+        var connWatcher = window.connectionWatcher;
+
+        function start() {
+            console.log("Starting watchers...");
+            var fetchOptions = {
+                method: "GET",
+                mode: "same-origin",
+                cache: "no-cache",
+                redirect: "follow",
+            };
+            connWatcher.init({
+                connections: {
+                    lan: {
+                        url: "http://localhost:8080/examples",
+                        fetchOptions,
+                        interval: 1000,
+                        onClosed: (report) => {
+                            console.log("LAN connection is DEAD. Details:", report);
+                            showLanResult(report);
+                        },
+                        onOpened: (report) => {
+                            console.log("LAN connection is ALIVE. Details:", report);
+                            showLanResult(report);
+                        }
+                    },
+                    conn1: {
+                        url: "http://localhost:8080/non-existing-url1.hu",
+                        fetchOptions,
+                        interval: 2500,
+                        onClosed: (report) => {
+                            console.log("CONN1 connection is DEAD. Details:", report);
+                            showConn1Result(report);
+                        },
+                        onOpened: (report) => {
+                            console.log("CONN1 connection is ALIVE. Details:", report);
+                            showConn1Result(report);
+                        }
+                    },
+                    conn2: {
+                        url: "http://localhost:8080/non-existing-url2.hu",
+                        fetchOptions,
+                        interval: 5000,
+                        onClosed: (report) => {
+                            console.log("CONN2 connection is DEAD. Details:", report);
+                            showConn2Result(report);
+                        },
+                        onOpened: (report) => {
+                            console.log("CONN2 connection is ALIVE. Details:", report);
+                            showConn2Result(report);
+                        }
+                    }
+                }
+            });
+        }
+
+        function stop() {
+            console.log("Stopping watchers...");
+            connWatcher.stopAll();
+        }
+
+        function formatReport(report) {
+            var obj = {
+                status: report.ok ? "ALIVE" : "DEAD",
+                responseStatusCode: report.lastResponse.status,
+                responseStatusText: report.lastResponse.statusText,
+                lastTry: new Date(report.timestamp)
+            }
+            return JSON.stringify(obj, null, 4);
+        }
+
+        function showLanResult(report) {
+            var lanElem = document.getElementById("lanResult");
+            lanElem.innerHTML = formatReport(report);
+        }
+
+        function showConn1Result(report) {
+            var conn1Elem = document.getElementById("conn1Result");
+            conn1Elem.innerHTML = formatReport(report);
+        }
+
+        function showConn2Result(report) {
+            var conn2Elem = document.getElementById("conn2Result");
+            conn2Elem.innerHTML = formatReport(report);
+        }
+
+        function logResults() {
+            console.log("Results:", connWatcher.getResults());
+        }
+    </script>
+</body>
+</html>
