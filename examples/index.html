@@ -28,8 +28,8 @@
     <script>
         var connWatcher = window.connectionWatcher;
 
-        function start() {
-            console.log("Starting watchers...");
+        function init() {
+            console.log("Initializing watchers...");
             var fetchOptions = {
                 method: "GET",
                 mode: "same-origin",
@@ -37,6 +37,16 @@
                 redirect: "follow",
             };
             connWatcher.init({
+                onConnectionOpened: event => {
+                    var msg = "Internet connection OPENED";
+                    alert(msg);
+                    console.log(msg, event);
+                },
+                onConnectionClosed: event => {
+                    var msg = "Internet connection CLOSED";
+                    alert(msg);
+                    console.log(msg, event);
+                },
                 connections: {
                     lan: {
                         url: "http://localhost:8080/examples",
@@ -81,6 +91,11 @@
             });
         }
 
+        function start() {
+            console.log("Starting watchers...");
+            connWatcher.startAll();
+        }
+
         function stop() {
             console.log("Stopping watchers...");
             connWatcher.stopAll();
@@ -114,6 +129,8 @@
         function logResults() {
             console.log("Results:", connWatcher.getResults());
         }
+
+        init();
     </script>
 </body>
 </html>

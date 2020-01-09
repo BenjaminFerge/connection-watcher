@@ -1,7 +1,7 @@
 {
   "name": "connection-watcher",
-  "version": "0.1.0",
-  "description": "Internet connection watcher library",
+  "version": "0.2.0",
+  "description": "HTTP service and internet connection watcher library",
   "main": "index.js",
   "scripts": {
     "test": "node test",
@@ -13,6 +13,8 @@
   },
   "keywords": [
     "internet",
+    "service",
+    "http",
     "connection",
     "watcher",
     "network"

@@ -2,6 +2,7 @@
 
 const results = {};
 const watchers = {};
+let OPTIONS = {};
 
 function createReport(ok, lastResponse) {
     return {
@@ -56,6 +57,7 @@ function stopById(id) {
 function stopByConnectionId(id) {
     const watcherId = watchers[id];
     stopById(watcherId);
+    delete watchers[id];
 }
 
 function stopAll() {
@@ -63,7 +65,16 @@ function stopAll() {
 }
 
 function init(options) {
-    const {connections} = options;
+    OPTIONS = options;
+    const {onConnectionOpened, onConnectionClosed} = options;
+
+    window.addEventListener('online',  onConnectionOpened);
+    window.addEventListener('offline', onConnectionClosed);
+}
+
+function startAll() {
+    const {connections} = OPTIONS;
+
     Object.keys(connections).forEach(id => {
         const conn = connections[id];
         setWatcher(id, conn);
@@ -75,5 +86,6 @@ module.exports = {
     stopByConnectionId,
     stopById,
     stopAll,
+    startAll,
     getResults
 };
