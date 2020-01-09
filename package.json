@@ -4,7 +4,7 @@
   "description": "Internet connection watcher library",
   "main": "index.js",
   "scripts": {
-    "test": "npm run test",
+    "test": "node test",
     "build": "browserify index.js --standalone connectionWatcher > dist/connection-watcher.js"
   },
   "repository": {
