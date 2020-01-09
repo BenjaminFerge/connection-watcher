@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "node test",
-    "build": "browserify index.js --standalone connectionWatcher > dist/connection-watcher.js"
+    "build": "browserify index.js --standalone connectionWatcher | terser --compress --mangle > dist/connection-watcher.min.js"
   },
   "repository": {
     "type": "git",
