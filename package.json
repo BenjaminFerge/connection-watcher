@@ -1,6 +1,6 @@
 {
   "name": "connection-watcher",
-  "version": "0.2.2",
+  "version": "0.2.4",
   "description": "HTTP service and internet connection watcher library",
   "main": "index.js",
   "scripts": {
