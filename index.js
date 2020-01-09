@@ -12,29 +12,43 @@ function createReport(ok, lastResponse) {
     };
 }
 
-async function checkConn(url, fetchOptions, openedCb, closedCb) {
+async function checkConn(connId, url, fetchOptions, openedCb, closedCb) {
     return await fetch(url, fetchOptions)
         .then(response => {
-            if (response.ok) {
-                const obj = createReport(true, response);
-                openedCb(obj);
-                return obj;
+            if (response.ok) { // Fetch succeed
+                if (!results[connId] || !results[connId].ok) { // Status changed
+                    const obj = createReport(true, response);
+                    openedCb(obj);
+                    return obj;
+                } else {
+                    return results[connId];
+                }
             }
-            const obj = createReport(false, response);
-            closedCb(obj);
-            return obj;
+            // Fetch failed
+            if (!results[connId] || results[connId].ok) { // Status changed
+                const obj = createReport(false, response);
+                closedCb(obj);
+                return obj;
+            } else {
+                return results[connId];
+            }
         })
         .catch(err => {
-            const obj = createReport(false, err);
-            closedCb(obj)
-            return obj;
+            // Fetch failed
+            if (!results[connId] || results[connId].ok) { // Status changed
+                const obj = createReport(false, err);
+                closedCb(obj)
+                return obj;
+            } else {
+                return results[connId];
+            }
         });
 }
 
 function setWatcher(id, conn) {
     const {onOpened, onClosed, interval, url, fetchOptions} = conn;
     const watcher = () => {
-        checkConn(url, fetchOptions, onOpened, onClosed)
+        checkConn(id, url, fetchOptions, onOpened, onClosed)
         .then(res => {
             results[id] = {
                 ...res,
